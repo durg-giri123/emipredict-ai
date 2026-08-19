@@ -1,0 +1,86 @@
+name: EMIPredict AI MLOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test_and_lint:
+    name: Run Unit Tests & Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pytest
+
+      - name: Lint Code with Flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings.
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Execute Test Suite
+        run: |
+          python -m pytest tests/ -v
+
+  train_and_evaluate:
+    name: Execute Pipeline & MLflow Verification
+    needs: test_and_lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Mini Pipeline Verification
+        run: |
+          python src/mlops/pipeline.py --records 5000
+
+      - name: Check Registered Artifacts
+        run: |
+          test -f artifacts/preprocessor.joblib
+          test -f artifacts/production_models/best_classifier.joblib
+          test -f artifacts/production_models/best_regressor.joblib
+          test -f artifacts/production_models/model_registry.json
+
+  deploy_staging:
+    name: Build Docker Container & Deploy
+    needs: train_and_evaluate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t emipredict-ai:latest .

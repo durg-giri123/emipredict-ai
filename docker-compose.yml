@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  emipredict-app:
+    build: .
+    container_name: emipredict-ai-app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+      - ./mlruns:/app/mlruns
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    restart: unless-stopped
+
+  mlflow-server:
+    build: .
+    container_name: emipredict-mlflow-server
+    command: mlflow ui --host 0.0.0.0 --port 5000 --backend-store-uri file:/app/mlruns
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./artifacts:/app/artifacts
+    restart: unless-stopped

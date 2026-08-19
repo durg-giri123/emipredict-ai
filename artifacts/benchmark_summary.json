@@ -1,0 +1,63 @@
+{
+    "dataset_size": 400000,
+    "pipeline_execution_time_sec": 513.74,
+    "classification_models": {
+        "Logistic_Regression": {
+            "test_accuracy": 0.9451,
+            "test_f1_weighted": 0.9304,
+            "val_f1_weighted": 0.9302,
+            "train_time_sec": 14.25
+        },
+        "Random_Forest_Classifier": {
+            "test_accuracy": 0.984,
+            "test_f1_weighted": 0.9833,
+            "val_f1_weighted": 0.9834,
+            "train_time_sec": 21.47
+        },
+        "XGBoost_Classifier": {
+            "test_accuracy": 0.986,
+            "test_f1_weighted": 0.9859,
+            "val_f1_weighted": 0.9865,
+            "train_time_sec": 13.16
+        }
+    },
+    "regression_models": {
+        "Linear_Ridge_Regression": {
+            "test_rmse": 2373.88,
+            "test_mae": 1413.03,
+            "test_r2": 0.9608,
+            "val_rmse": 2437.62,
+            "train_time_sec": 0.41
+        },
+        "Random_Forest_Regressor": {
+            "test_rmse": 278.54,
+            "test_mae": 168.71,
+            "test_r2": 0.9995,
+            "val_rmse": 283.62,
+            "train_time_sec": 213.71
+        },
+        "XGBoost_Regressor": {
+            "test_rmse": 286.32,
+            "test_mae": 196.74,
+            "test_r2": 0.9994,
+            "val_rmse": 291.08,
+            "train_time_sec": 6.9
+        }
+    },
+    "production_registry": {
+        "best_classifier": {
+            "name": "XGBoost_Classifier",
+            "val_f1_weighted": 0.9864976900524294,
+            "test_accuracy": 0.9859833333333333,
+            "path": "artifacts\\production_models\\best_classifier.joblib",
+            "stage": "Production"
+        },
+        "best_regressor": {
+            "name": "Random_Forest_Regressor",
+            "val_rmse": 283.6234537051803,
+            "test_r2": 0.9994599865491769,
+            "path": "artifacts\\production_models\\best_regressor.joblib",
+            "stage": "Production"
+        }
+    }
+}
