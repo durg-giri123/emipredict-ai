@@ -21,7 +21,7 @@ def models_exist():
     return os.path.exists(clf) and os.path.exists(reg) and os.path.exists(pre)
 
 
-def run_cloud_setup(records: int = 50000):
+def run_cloud_setup(records: int = 10000):
     """
     Runs a lightweight version of the pipeline suitable for cloud environments.
     Trains on 50K records by default — fast enough to complete on Streamlit Cloud.

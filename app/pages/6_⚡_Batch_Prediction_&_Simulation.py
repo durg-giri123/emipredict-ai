@@ -160,12 +160,16 @@ with tab_stress:
     st.markdown("### 🌪️ Portfolio Macroeconomic Stress-Testing Simulator")
     st.markdown("Simulate macroeconomic shocks across the loan portfolio to evaluate default risk migration and capital adequacy.")
     
-    # Load sample dataset
+    # Load sample dataset with pyarrow compatibility fallback
     sample_path = "data/processed/dataset_sample_50k.parquet"
+    stress_df = None
     if os.path.exists(sample_path):
-        stress_df = pd.read_parquet(sample_path)
-        stress_df = stress_df.sample(min(5000, len(stress_df)), random_state=42)
-    else:
+        try:
+            tmp = pd.read_parquet(sample_path)
+            stress_df = tmp.sample(min(5000, len(tmp)), random_state=42)
+        except Exception:
+            stress_df = None
+    if stress_df is None:
         stress_df = generate_emi_dataset(total_records=5000, random_state=42)
 
     col_s1, col_s2, col_s3 = st.columns(3)

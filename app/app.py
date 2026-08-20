@@ -75,8 +75,8 @@ if not os.path.exists(_clf_path) or not os.path.exists(_reg_path):
     try:
         sys.path.insert(0, PROJECT_ROOT)
         from startup import run_cloud_setup
-        with st.spinner("First-time setup: training models on 50K records (~2 min)..."):
-            run_cloud_setup(records=50000)
+        with st.spinner("First-time setup: training models (~2 min). Please wait..."):
+            run_cloud_setup(records=10000)
         st.success("Setup complete! Refreshing...")
         st.rerun()
     except Exception as _e:

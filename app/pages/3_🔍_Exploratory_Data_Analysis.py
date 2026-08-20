@@ -37,18 +37,31 @@ raw_parquet_path = os.path.join(PROJECT_ROOT, "data/raw/emi_dataset_400k.parquet
 
 @st.cache_data
 def load_eda_data():
+    from src.data.data_generator import generate_emi_dataset
+    # Try sample parquet
     if os.path.exists(sample_path):
-        return pd.read_parquet(sample_path)
-    elif os.path.exists(raw_parquet_path):
-        df_raw = pd.read_parquet(raw_parquet_path)
-        return df_raw.sample(n=min(30000, len(df_raw)), random_state=42)
-    else:
-        # Generate on the fly for EDA
-        from src.data.data_generator import generate_emi_dataset
-        df_gen = generate_emi_dataset(total_records=25000, random_state=42)
-        os.makedirs(os.path.dirname(sample_path), exist_ok=True)
+        try:
+            return pd.read_parquet(sample_path)
+        except Exception:
+            try:
+                os.remove(sample_path)
+            except Exception:
+                pass
+    # Try raw parquet
+    if os.path.exists(raw_parquet_path):
+        try:
+            df_raw = pd.read_parquet(raw_parquet_path)
+            return df_raw.sample(n=min(30000, len(df_raw)), random_state=42)
+        except Exception:
+            pass
+    # Generate fresh — lightweight for cloud
+    df_gen = generate_emi_dataset(total_records=10000, random_state=42)
+    os.makedirs(os.path.dirname(sample_path), exist_ok=True)
+    try:
         df_gen.to_parquet(sample_path, index=False)
-        return df_gen
+    except Exception:
+        pass
+    return df_gen
 
 df_raw = load_eda_data()
 fe = FinancialFeatureEngineer()

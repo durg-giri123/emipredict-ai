@@ -36,24 +36,43 @@ db = FinancialDatabaseManager(db_path=os.path.join(PROJECT_ROOT, "data/database/
 db.seed_initial_demo_records(25)
 db_stats = db.get_summary_statistics()
 
-# Load 50k sample dataset for rich visualizations if available
+# Load sample dataset for visualizations — with pyarrow compatibility fallback
 sample_path = os.path.join(PROJECT_ROOT, "data/processed/dataset_sample_50k.parquet")
 raw_parquet_path = os.path.join(PROJECT_ROOT, "data/raw/emi_dataset_400k.parquet")
 
-df = None
-if os.path.exists(sample_path):
-    df = pd.read_parquet(sample_path)
-elif os.path.exists(raw_parquet_path):
-    df = pd.read_parquet(raw_parquet_path)
-    df = df.sample(n=min(30000, len(df)), random_state=42)
-else:
+def _safe_load_df():
+    """Load dataset with fallback if parquet is incompatible (pyarrow version mismatch on cloud)."""
+    from src.data.data_generator import generate_emi_dataset
+    # Try sample parquet first
+    if os.path.exists(sample_path):
+        try:
+            return pd.read_parquet(sample_path)
+        except Exception:
+            os.remove(sample_path)  # delete corrupted file
+    # Try raw parquet
+    if os.path.exists(raw_parquet_path):
+        try:
+            tmp = pd.read_parquet(raw_parquet_path)
+            return tmp.sample(n=min(30000, len(tmp)), random_state=42)
+        except Exception:
+            pass
+    # Generate fresh data as last resort
+    fresh = generate_emi_dataset(total_records=10000, random_state=42)
+    os.makedirs(os.path.dirname(sample_path), exist_ok=True)
     try:
-        from src.data.data_generator import generate_emi_dataset
-        df = generate_emi_dataset(total_records=25000, random_state=42)
-        os.makedirs(os.path.dirname(sample_path), exist_ok=True)
-        df.to_parquet(sample_path, index=False)
+        fresh.to_parquet(sample_path, index=False)
     except Exception:
+        pass
+    return fresh
+
+df = None
+try:
+    df = _safe_load_df()
+except Exception:
+    try:
         df = db.search_applications(limit=1000)
+    except Exception:
+        df = None
 
 if df is not None:
     # Harmonize database columns with analytics columns
