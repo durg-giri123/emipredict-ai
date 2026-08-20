@@ -1,61 +1,61 @@
 {
-    "dataset_size": 400000,
-    "pipeline_execution_time_sec": 513.74,
+    "dataset_size": 5000,
+    "pipeline_execution_time_sec": 207.16,
     "classification_models": {
         "Logistic_Regression": {
-            "test_accuracy": 0.9451,
-            "test_f1_weighted": 0.9304,
-            "val_f1_weighted": 0.9302,
-            "train_time_sec": 14.25
+            "test_accuracy": 0.944,
+            "test_f1_weighted": 0.9328,
+            "val_f1_weighted": 0.9217,
+            "train_time_sec": 0.14
         },
         "Random_Forest_Classifier": {
-            "test_accuracy": 0.984,
-            "test_f1_weighted": 0.9833,
-            "val_f1_weighted": 0.9834,
-            "train_time_sec": 21.47
+            "test_accuracy": 0.968,
+            "test_f1_weighted": 0.9613,
+            "val_f1_weighted": 0.9561,
+            "train_time_sec": 0.26
         },
         "XGBoost_Classifier": {
-            "test_accuracy": 0.986,
-            "test_f1_weighted": 0.9859,
-            "val_f1_weighted": 0.9865,
-            "train_time_sec": 13.16
+            "test_accuracy": 0.9733,
+            "test_f1_weighted": 0.9737,
+            "val_f1_weighted": 0.9749,
+            "train_time_sec": 0.63
         }
     },
     "regression_models": {
         "Linear_Ridge_Regression": {
-            "test_rmse": 2373.88,
-            "test_mae": 1413.03,
-            "test_r2": 0.9608,
-            "val_rmse": 2437.62,
-            "train_time_sec": 0.41
+            "test_rmse": 2330.25,
+            "test_mae": 1395.49,
+            "test_r2": 0.9614,
+            "val_rmse": 2172.25,
+            "train_time_sec": 0.02
         },
         "Random_Forest_Regressor": {
-            "test_rmse": 278.54,
-            "test_mae": 168.71,
+            "test_rmse": 264.47,
+            "test_mae": 167.54,
             "test_r2": 0.9995,
-            "val_rmse": 283.62,
-            "train_time_sec": 213.71
+            "val_rmse": 388.12,
+            "train_time_sec": 1.57
         },
         "XGBoost_Regressor": {
-            "test_rmse": 286.32,
-            "test_mae": 196.74,
-            "test_r2": 0.9994,
-            "val_rmse": 291.08,
-            "train_time_sec": 6.9
+            "test_rmse": 434.04,
+            "test_mae": 278.92,
+            "test_r2": 0.9987,
+            "val_rmse": 457.88,
+            "train_time_sec": 0.89
         }
     },
     "production_registry": {
         "best_classifier": {
             "name": "XGBoost_Classifier",
-            "val_f1_weighted": 0.9864976900524294,
-            "test_accuracy": 0.9859833333333333,
+            "val_f1_weighted": 0.9748637625677299,
+            "test_accuracy": 0.9733333333333334,
             "path": "artifacts\\production_models\\best_classifier.joblib",
             "stage": "Production"
         },
         "best_regressor": {
             "name": "Random_Forest_Regressor",
-            "val_rmse": 283.6234537051803,
-            "test_r2": 0.9994599865491769,
+            "val_rmse": 388.121384774904,
+            "test_r2": 0.9995032961211424,
             "path": "artifacts\\production_models\\best_regressor.joblib",
             "stage": "Production"
         }

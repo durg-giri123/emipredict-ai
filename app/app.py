@@ -68,20 +68,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Auto-run cloud setup if models are missing (first boot on Streamlit Cloud)
-_clf_path = os.path.join(PROJECT_ROOT, "artifacts/production_models/best_classifier.joblib")
-_reg_path = os.path.join(PROJECT_ROOT, "artifacts/production_models/best_regressor.joblib")
-if not os.path.exists(_clf_path) or not os.path.exists(_reg_path):
-    try:
-        sys.path.insert(0, PROJECT_ROOT)
-        from startup import run_cloud_setup
-        with st.spinner("First-time setup: training models (~2 min). Please wait..."):
-            run_cloud_setup(records=10000)
-        st.success("Setup complete! Refreshing...")
-        st.rerun()
-    except Exception as _e:
-        st.warning(f"Auto-setup encountered an issue: {_e}. Some features may be limited.")
-
 # Initialize Database
 db = FinancialDatabaseManager()
 db.seed_initial_demo_records(25)

@@ -1,0 +1,16 @@
+{
+    "best_classifier": {
+        "name": "XGBoost_Classifier",
+        "val_f1_weighted": 0.9748637625677299,
+        "test_accuracy": 0.9733333333333334,
+        "path": "artifacts\\production_models\\best_classifier.joblib",
+        "stage": "Production"
+    },
+    "best_regressor": {
+        "name": "Random_Forest_Regressor",
+        "val_rmse": 388.121384774904,
+        "test_r2": 0.9995032961211424,
+        "path": "artifacts\\production_models\\best_regressor.joblib",
+        "stage": "Production"
+    }
+}

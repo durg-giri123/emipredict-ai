@@ -1,5 +1,5 @@
 {
-    "total_records": 400000,
+    "total_records": 5000,
     "total_columns": 27,
     "missing_values": {
         "age": 0,
