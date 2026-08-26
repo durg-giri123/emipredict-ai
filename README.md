@@ -129,6 +129,8 @@ python -m streamlit run app/app.py
 
 Open http://localhost:8501 in your browser.
 
+Streamlit app ldeployed link: https://emipredict-ai-3afjqpqriqf94bglzres4v.streamlit.app/
+
 ### 4. (Optional) View MLflow experiment dashboard
 
 ```bash
